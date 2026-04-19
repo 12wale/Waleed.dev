@@ -32,10 +32,10 @@ export default function Contact() {
               </div>
             </div>
             <div className="flex gap-4 md:gap-6 justify-center lg:justify-start">
-              <a className="relative group w-12 h-12 rounded-full glass flex items-center justify-center hover:shadow-[0_0_20px_#17a8ec] transition-all" href="#" title="GitHub">
+              <a className="relative group w-12 h-12 rounded-full glass flex items-center justify-center hover:shadow-[0_0_20px_#17a8ec] transition-all" href="https://github.com/12wale" title="GitHub">
                 <Image alt="GitHub" width={20} height={20} className="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjTmGa4cUs3XCqvbf0PnbaB8P0CXbp_mVxzi6YfgiSNJvDfTklHfSoqjBagv4AryIYTg7xPAnocW_axM3HNAF0-68dv1Ujkr7QDGDG5CKCJTsuEim35-1q-eufqDUelZMCZiE36WsE1Qjbs70GRgv68pJEwEE1mWWd43YPoN1qnZ3cfmeBpoRltVr25DDxkM8KoWzdza0e_EAxWHp6u0tn1RGy4NzGAPvkzDSFj8pl8uT-YHE0BaRPHzmGv6MHALPbKmVQQHXloGU" />
               </a>
-              <a className="relative group w-12 h-12 rounded-full glass flex items-center justify-center hover:shadow-[0_0_20px_#bd9dff] transition-all" href="#" title="LinkedIn">
+              <a className="relative group w-12 h-12 rounded-full glass flex items-center justify-center hover:shadow-[0_0_20px_#bd9dff] transition-all" href="www.linkedin.com/in/waleed-refaat-4b4164203" title="LinkedIn">
                 <Image alt="LinkedIn" width={20} height={20} className="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIywL68t-xCGmfzrzCNb5cQazpJbQ7zd_AOsOxzwCNTF0o7PrwweD9gkAXq65GR76I_HI4xd7Vzhs2k_qLOFucOTeLR2eP_I1jXBFcaArhNtz9ENfuYyQ89N5sAc6ziCL_UkkJB7VvPjRETQVrf66k29MU27m8IOiZdpNNoM763ofxsgB-LiQzzQFrfj5tABRfhXf60Lg6MfP_TIx5Oh-HX-z1HmdPPBYygHFNA8aip48zLIE1rU4K9P-Kibaxc9E0JM25wtHo5tU" />
               </a>
               <a className="relative group w-12 h-12 rounded-full glass flex items-center justify-center hover:shadow-[0_0_20px_#ff97b2] transition-all" href="mailto:wlydrftm399@gmail.com" title="Email">
