@@ -137,35 +137,47 @@ export default function Projects() {
                 </div>
 
                 {/* Action links */}
-                <div className="flex gap-4 pt-4 mt-2 items-center">
+                <div className="flex flex-wrap gap-3 pt-4 mt-2 items-center">
                   {project.liveUrl && (
                     <a
-                      className="flex items-center gap-2 text-xs font-bold text-white hover:text-secondary transition-colors group/icon"
+                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-secondary/80 rounded-lg text-xs font-bold text-surface hover:scale-105 hover:shadow-[0_0_20px_rgba(189,157,255,0.4)] transition-all duration-300 group/btn"
                       href={project.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      title="Live Site"
                     >
-                      <span className="material-symbols-outlined text-base">language</span>
-                      <span className="hidden sm:inline">Live Site</span>
+                      <span className="material-symbols-outlined text-sm group-hover/btn:rotate-12 transition-transform">language</span>
+                      <span>Live Demo</span>
                     </a>
                   )}
                   {project.codeUrl && (
                     <a
-                      className="flex items-center gap-2 text-xs font-bold text-white hover:text-primary transition-colors group/icon"
+                      className="flex items-center gap-2 px-4 py-2 border border-outline-variant/30 bg-surface/50 rounded-lg text-xs font-bold text-white hover:bg-surface-variant hover:border-primary/50 transition-all duration-300 group/btn"
                       href={project.codeUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      title="Source Code"
                     >
-                      <span className="material-symbols-outlined text-base">code</span>
-                      <span className="hidden sm:inline">Source</span>
+                      <span className="material-symbols-outlined text-sm group-hover/btn:scale-110 transition-transform">code</span>
+                      <span>Source</span>
                     </a>
                   )}
                 </div>
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Global CTA at the bottom */}
+        <div className="mt-20 text-center" data-aos="fade-up">
+          <a 
+            href="https://github.com/12wale" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-surface-variant/30 border border-outline-variant/50 rounded-xl text-white font-bold hover:bg-surface-variant/50 hover:border-primary/50 transition-all duration-500 hover:shadow-[0_0_40px_rgba(189,157,255,0.2)] group"
+          >
+            <span className="material-symbols-outlined text-primary group-hover:rotate-12 transition-transform">terminal</span>
+            <span>Explore more on GitHub</span>
+            <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </a>
         </div>
       </div>
     </section>
