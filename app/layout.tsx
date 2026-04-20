@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import AosInit from "@/components/AosInit";
+import Tracker from "@/components/Tracker";
 
 export const metadata: Metadata = {
   title: "Waleed Refaat Abbas | Frontend Developer",
@@ -20,8 +21,10 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col text-on-surface selection:bg-primary selection:text-on-primary">
         <AosInit />
+        <Tracker />
         {children}
       </body>
     </html>
   );
 }
+
