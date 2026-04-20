@@ -1,5 +1,5 @@
 import dbConnect from '@/lib/db';
-import Visitor from '@/models/Visitor';
+import Visitor, { IVisitor } from '@/models/Visitor';
 import { 
   Users, 
   Eye, 
@@ -15,12 +15,14 @@ import ResetButton from '@/components/ResetButton';
 
 const formatTimeAgo = (date: Date) => {
   const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+  if (seconds < 5) return 'just now';
   if (seconds < 60) return `${seconds}s ago`;
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60) return `${minutes}m ago`;
   const hours = Math.floor(minutes / 60);
   if (hours < 24) return `${hours}h ago`;
   const days = Math.floor(hours / 24);
+  if (days === 1) return 'yesterday';
   return `${days}d ago`;
 };
 
@@ -33,7 +35,7 @@ export default async function DashboardPage() {
     const visitorsRaw = await Visitor.find({}).sort({ createdAt: -1 }).limit(100).lean();
     
     // Map Mongoose documents to serializable objects
-    const visitors = visitorsRaw.map((v: any) => ({
+    const visitors = (visitorsRaw as unknown as IVisitor[]).map((v) => ({
       id: v._id.toString(),
       ip: v.ip,
       country: v.country,
@@ -140,13 +142,16 @@ export default async function DashboardPage() {
                     <th className="px-6 py-4 font-semibold text-right">Time</th>
                   </tr>
                 </thead>
+                {/* eslint-disable-next-line react-hooks/error-boundaries */}
                 <tbody className="divide-y divide-outline-variant">
-                  {visitors.map((v: any) => (
+                  {visitors.map((v) => (
                     <tr key={v.id} className="hover:bg-surface-container-high transition-colors group">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center font-bold text-sm text-primary border border-outline-variant group-hover:border-primary transition-colors">
-                            {v.ip.split('.').pop()?.slice(-2) || '??'}
+                            {v.ip.includes(':') 
+                              ? v.ip.split(':').pop()?.slice(-2).toUpperCase() || 'V6' 
+                              : v.ip.split('.').pop() || '??'}
                           </div>
                           <div>
                             <div className="flex items-center gap-1 font-bold">

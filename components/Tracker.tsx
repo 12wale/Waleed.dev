@@ -9,7 +9,7 @@ export default function Tracker() {
   useEffect(() => {
     const trackVisit = async () => {
       try {
-        await fetch('/api/track', {
+        await fetch('/api/v-log', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
