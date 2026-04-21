@@ -13,13 +13,18 @@ const navItems = [
 ];
 
 export default function Navbar() {
+  const [mounted, setMounted] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
   const navRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+    
     const handleScroll = () => {
+      if (typeof window === 'undefined') return;
       const scrollPosition = window.scrollY;
       
       let currentActive = "hero";
@@ -51,6 +56,8 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
+    if (!mounted) return;
+    
     const activeIndex = navItems.findIndex(item => item.href === `#${activeSection}`);
     const activeElement = navRefs.current[activeIndex];
     
@@ -63,7 +70,7 @@ export default function Navbar() {
     } else {
       setIndicatorStyle(prev => ({ ...prev, opacity: 0 }));
     }
-  }, [activeSection]);
+  }, [activeSection, mounted]);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 

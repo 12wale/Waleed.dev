@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function Hero() {
+  const [mounted, setMounted] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   
   // Terminal typing effect state
@@ -11,6 +12,9 @@ export default function Hero() {
   const [isTypingComplete, setIsTypingComplete] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+    
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({
         x: (e.clientX / window.innerWidth) * 30 - 15,
@@ -58,6 +62,24 @@ export default function Hero() {
     };
   }, []);
 
+  // Return a static placeholder or null until mounted to avoid hydration mismatch
+  // However, we want to keep the layout stable, so we just avoid the interactive parts
+  const transformStyle = mounted 
+    ? { transform: `translate(${mousePosition.x * -2}px, ${mousePosition.y * -2}px) rotate(12deg)` }
+    : { transform: `rotate(12deg)` };
+
+  const transformStyleNode = mounted
+    ? { transform: `translate(${mousePosition.x * 3}px, ${mousePosition.y * 3}px)` }
+    : {};
+
+  const transformStyleNext = mounted
+    ? { transform: `translate(${mousePosition.x * 5}px, ${mousePosition.y * 5}px) rotate(-15deg)` }
+    : { transform: `rotate(-15deg)` };
+
+  const transformStyleJS = mounted
+    ? { transform: `translate(${mousePosition.x * -4}px, ${mousePosition.y * -4}px) rotate(-10deg)` }
+    : { transform: `rotate(-10deg)` };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 md:px-8 overflow-hidden bg-surface" id="hero">
       {/* Infinite Scrolling Grid Pattern over the background */}
@@ -67,7 +89,7 @@ export default function Hero() {
       {/* Shape 1: React Square */}
       <div 
         className="absolute top-[20%] left-[10%] w-32 h-32 md:w-48 md:h-48 bg-primary/10 rounded-2xl backdrop-blur-lg border border-primary/20 transition-transform duration-700 ease-out shadow-[0_0_50px_rgba(189,157,255,0.2)] rotate-12 flex items-center justify-center group/shape"
-        style={{ transform: `translate(${mousePosition.x * -2}px, ${mousePosition.y * -2}px) rotate(12deg)` }}
+        style={transformStyle}
       >
         <div className="relative w-16 h-16 md:w-24 md:h-24 opacity-40 group-hover/shape:opacity-80 transition-opacity filter grayscale brightness-200 contrast-125">
           <Image 
@@ -82,7 +104,7 @@ export default function Hero() {
       {/* Shape 2: Node.js Circle */}
       <div 
         className="absolute bottom-[15%] right-[10%] w-40 h-40 md:w-64 md:h-64 bg-secondary/10 rounded-full backdrop-blur-xl border border-secondary/20 transition-transform duration-1000 ease-out shadow-[0_0_60px_rgba(255,255,255,0.1)] flex items-center justify-center group/shape"
-        style={{ transform: `translate(${mousePosition.x * 3}px, ${mousePosition.y * 3}px)` }}
+        style={transformStyleNode}
       >
         <div className="relative w-20 h-20 md:w-32 md:h-32 opacity-30 group-hover/shape:opacity-70 transition-opacity filter grayscale brightness-200">
           <Image 
@@ -97,7 +119,7 @@ export default function Hero() {
       {/* Shape 3: Next.js Small floating accent */}
       <div 
         className="absolute top-[40%] right-[25%] w-12 h-12 md:w-20 md:h-20 bg-blue-500/20 rounded-lg backdrop-blur-md border border-blue-400/30 transition-transform duration-500 ease-out shadow-[0_0_30px_rgba(59,130,246,0.3)] flex items-center justify-center group/shape"
-        style={{ transform: `translate(${mousePosition.x * 5}px, ${mousePosition.y * 5}px) rotate(-15deg)` }}
+        style={transformStyleNext}
       >
         <div className="relative w-8 h-8 md:w-12 md:h-12 opacity-40 group-hover/shape:opacity-90 transition-opacity filter invert brightness-200">
           <Image 
@@ -112,7 +134,7 @@ export default function Hero() {
       {/* Shape 4: JS floating accent */}
       <div 
         className="absolute bottom-[25%] left-[20%] w-16 h-16 md:w-24 md:h-24 bg-yellow-500/10 rounded-xl backdrop-blur-md border border-yellow-400/20 transition-transform duration-800 ease-out shadow-[0_0_40px_rgba(234,179,8,0.2)] hidden lg:flex items-center justify-center group/shape"
-        style={{ transform: `translate(${mousePosition.x * -4}px, ${mousePosition.y * -4}px) rotate(-10deg)` }}
+        style={transformStyleJS}
       >
         <div className="relative w-10 h-10 md:w-14 md:h-14 opacity-30 group-hover/shape:opacity-80 transition-opacity filter grayscale brightness-200">
           <Image 
