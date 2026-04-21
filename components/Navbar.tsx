@@ -60,6 +60,8 @@ export default function Navbar() {
         width: activeElement.offsetWidth,
         opacity: 1
       });
+    } else {
+      setIndicatorStyle(prev => ({ ...prev, opacity: 0 }));
     }
   }, [activeSection]);
 
