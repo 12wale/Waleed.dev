@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 
+import Link from "next/link";
+
 const navItems = [
   { name: "Hero", href: "#hero" },
   { name: "About", href: "#about" },
@@ -63,8 +65,8 @@ export default function Navbar() {
     
     if (activeElement) {
       setIndicatorStyle({
-        left: activeElement.offsetLeft,
-        width: activeElement.offsetWidth,
+        left: (activeElement as HTMLAnchorElement).offsetLeft,
+        width: (activeElement as HTMLAnchorElement).offsetWidth,
         opacity: 1
       });
     } else {
@@ -77,12 +79,12 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 w-full z-50 bg-[#192540]/60 backdrop-blur-3xl border-b border-[#40485d]/30 shadow-[0_0_40px_rgba(138,76,252,0.08)]">
       <div className="flex justify-between items-center h-16 px-4 md:px-8 max-w-7xl mx-auto relative">
-        <a href="#hero" className="text-xl font-extrabold tracking-tighter text-white hover:text-[#bd9dff] transition-colors relative z-10">Waleed.dev</a>
+        <Link href="#hero" className="text-xl font-extrabold tracking-tighter text-white hover:text-[#bd9dff] transition-colors relative z-10">Waleed.dev</Link>
         
         {/* Desktop Navigation */}
         <div className="hidden lg:flex gap-8 items-center font-medium tracking-tight text-sm relative h-full">
           {navItems.map((item, index) => (
-            <a
+            <Link
               key={item.name}
               href={item.href}
               ref={(el) => { navRefs.current[index] = el; }}
@@ -93,7 +95,7 @@ export default function Navbar() {
               }`}
             >
               {item.name}
-            </a>
+            </Link>
           ))}
           
           {/* Animated Active Line */}
@@ -129,7 +131,7 @@ export default function Navbar() {
       >
         <div className="flex flex-col px-4 space-y-1">
           {navItems.map((item) => (
-            <a
+            <Link
               key={item.name}
               href={item.href}
               onClick={() => setIsMobileMenuOpen(false)}
@@ -140,10 +142,11 @@ export default function Navbar() {
               }`}
             >
               {item.name}
-            </a>
+            </Link>
           ))}
         </div>
       </div>
     </nav>
   );
 }
+
