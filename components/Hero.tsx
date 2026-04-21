@@ -132,7 +132,7 @@ export default function Hero() {
         <span className="inline-block label-md uppercase tracking-[0.2em] text-secondary font-bold mb-6 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] hover:scale-105 transition-transform cursor-default">
           MERN Stack Developer
         </span>
-        <h1 className="text-4xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter mb-8 text-white leading-[1.1] md:leading-[0.9] drop-shadow-2xl">
+        <h1 className="text-3xl sm:text-4xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter mb-8 text-white leading-[1.1] md:leading-[0.9] drop-shadow-2xl">
           Waleed Refaat Abbas
         </h1>
         

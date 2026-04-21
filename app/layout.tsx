@@ -19,7 +19,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
         <link rel="icon" href="/logo.png" />
       </head>
-      <body className="min-h-full flex flex-col text-on-surface selection:bg-primary selection:text-on-primary">
+      <body className="min-h-full flex flex-col w-full overflow-x-hidden text-on-surface selection:bg-primary selection:text-on-primary">
         <AosInit />
         <Tracker />
         {children}
@@ -27,4 +27,3 @@ export default function RootLayout({
     </html>
   );
 }
-
