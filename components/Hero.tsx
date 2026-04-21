@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
+import Link from "next/link";
+
 export default function Hero() {
   const [mounted, setMounted] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -173,13 +175,13 @@ export default function Hero() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-          <a className="group relative px-10 py-5 bg-gradient-to-r from-primary to-white rounded-2xl text-[#0a1128] font-extrabold title-md transition-all duration-500 hover:scale-105 hover:shadow-[0_0_50px_rgba(189,157,255,0.8)] overflow-hidden w-full sm:w-auto flex items-center justify-center gap-3" href="#projects">
+          <Link className="group relative px-10 py-5 bg-gradient-to-r from-primary to-white rounded-2xl text-[#0a1128] font-extrabold title-md transition-all duration-500 hover:scale-105 hover:shadow-[0_0_50px_rgba(189,157,255,0.8)] overflow-hidden w-full sm:w-auto flex items-center justify-center gap-3" href="#projects">
             <span className="relative z-10 uppercase tracking-wider"> Projects</span>
             <span className="material-symbols-outlined relative z-10 transition-transform duration-500 group-hover:translate-x-2">arrow_forward</span>
             
             {/* Button internal shine effect */}
             <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/50 to-transparent z-0"></div>
-          </a>
+          </Link>
           <a className="group relative px-10 py-5 border-2 border-outline-variant/50 rounded-2xl text-white font-bold title-md hover:bg-surface-variant/50 transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:-translate-y-1 w-full sm:w-auto bg-[#192540]/20 backdrop-blur-md flex items-center justify-center gap-2" href="/Waleed_Refaat_CV_Updated.pdf" download="Waleed_Refaat_CV.pdf">
             <span className="material-symbols-outlined">download</span>
             Download CV
@@ -193,3 +195,4 @@ export default function Hero() {
     </section>
   );
 }
+
