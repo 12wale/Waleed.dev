@@ -132,7 +132,7 @@ export default function Hero() {
         <span className="inline-block label-md uppercase tracking-[0.2em] text-secondary font-bold mb-6 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] hover:scale-105 transition-transform cursor-default">
           MERN Stack Developer
         </span>
-        <h1 className="text-3xl sm:text-4xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter mb-8 text-white leading-[1.1] md:leading-[0.9] drop-shadow-2xl">
+        <h1 className="text-2xl sm:text-4xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter mb-8 text-white leading-[1.1] md:leading-[0.9] drop-shadow-2xl">
           Waleed Refaat Abbas
         </h1>
         
@@ -144,7 +144,7 @@ export default function Hero() {
             <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
             <span className="text-xs ml-2 text-[#a3aac4]">guest@waleed-dev:~$</span>
           </div>
-          <div className="leading-relaxed">
+          <div className="leading-relaxed break-all whitespace-pre-wrap">
             <span className="text-blue-400 font-bold">echo</span> <span className="text-white">&quot;{displayedText}&quot;</span>
             <span className={`inline-block w-2 h-5 bg-green-400 ml-1 align-middle ${isTypingComplete ? 'animate-pulse' : ''}`}></span>
           </div>
