@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/logo.png",
   },
+  other: {
+    'google-site-verification': 'MARUOjaxwvLn-7xpB8W8-3f_UOOdo7L0zGJTnDOMAho',
+  },
 };
 
 export default function RootLayout({
