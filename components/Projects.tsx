@@ -75,6 +75,24 @@ const projects = [
     codeUrl: null,
     colSpan: "",
   },
+  {
+    id: "jabalawi",
+    name: "Jabalawi – Spiritual Retreats",
+    url: "https://jabalawi.vercel.app/",
+    previewUrl: SHOT("https://jabalawi.vercel.app/"),
+    tags: ["React.js", "Next.js", "Tailwind CSS"],
+    description:
+      "A modern and responsive restaurant website built with React and Tailwind CSS. The project features smooth animations, an elegant UI, categorized menu sections, and an optimized user experience across all devices. Designed to reflect the restaurant's identity while delivering high performance and seamless navigation..",
+    featuresTitle: "Key Features",
+    features: [
+      "Interactive and visually appealing restaurant menu",
+      "Easy and intuitive navigation between sections",
+      "Featured dishes section to highlight special meals",
+    ],
+    liveUrl: "https://jabalawi.vercel.app/",
+    codeUrl: null,
+    colSpan: "",
+  },
 ];
 
 export default function Projects() {

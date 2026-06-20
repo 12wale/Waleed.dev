@@ -1,5 +1,5 @@
 import Image from "next/image";
-import self from "@/public/PROFILE.jpg"
+import self from "@/public/PROFILE.png"
 export default function About() {
   return (
     <section className="py-16 md:py-24 px-4 md:px-8 bg-surface" id="about">
