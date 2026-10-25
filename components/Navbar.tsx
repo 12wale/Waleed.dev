@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { gameAudio } from "@/lib/gameAudio";
 
 const navItems = [
   { name: "Hero", href: "#hero" },
@@ -58,6 +59,8 @@ export default function Navbar() {
         {/* Brand Logo */}
         <Link
           href="#hero"
+          onMouseEnter={() => gameAudio.playHover()}
+          onClick={() => gameAudio.playSelect()}
           className="group flex items-center gap-2 text-base md:text-lg font-extrabold tracking-wider text-white font-orbitron"
         >
           <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-primary to-secondary animate-pulse shadow-[0_0_12px_#bd9dff]"></span>
@@ -72,6 +75,8 @@ export default function Navbar() {
               <Link
                 key={item.name}
                 href={item.href}
+                onMouseEnter={() => gameAudio.playHover()}
+                onClick={() => gameAudio.playSelect()}
                 className={`relative px-3.5 py-1.5 text-xs font-semibold tracking-wide rounded-full transition-colors duration-200 z-10 ${
                   isActive ? "text-white" : "text-on-surface-variant hover:text-white"
                 }`}
@@ -93,7 +98,9 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center gap-3">
           <Link
             href="#contact"
-            className="px-4 py-1.5 text-xs font-bold rounded-full bg-gradient-to-r from-primary to-secondary text-surface hover:shadow-[0_0_20px_rgba(189,157,255,0.5)] transition-all duration-300 hover:scale-105 uppercase tracking-wider font-orbitron"
+            onMouseEnter={() => gameAudio.playHover()}
+            onClick={() => gameAudio.playSelect()}
+            className="px-4 py-1.5 text-xs font-bold rounded-full bg-gradient-to-r from-primary to-secondary text-surface hover:shadow-[0_0_20px_rgba(189,157,255,0.5)] transition-all duration-300 hover:scale-105 uppercase tracking-wider font-orbitron cursor-pointer"
           >
             Hire Me
           </Link>

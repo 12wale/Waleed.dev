@@ -2,45 +2,48 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useGame } from "@/context/GameContext";
+import { gameAudio } from "@/lib/gameAudio";
 
 interface SkillItem {
   name: string;
   category: "frontend" | "backend" | "languages" | "animation";
   level: string;
   badge: string;
+  power: number;
 }
 
 const SKILLS_DATA: SkillItem[] = [
   // Frontend
-  { name: "React.js / React 19", category: "frontend", level: "Advanced", badge: "Core" },
-  { name: "Next.js 15 (App Router)", category: "frontend", level: "Advanced", badge: "Core" },
-  { name: "Tailwind CSS v4", category: "frontend", level: "Expert", badge: "Styling" },
-  { name: "Zustand & Context API", category: "frontend", level: "Advanced", badge: "State" },
-  { name: "Redux / Redux Toolkit", category: "frontend", level: "Intermediate", badge: "State" },
-  { name: "Responsive & Mobile First", category: "frontend", level: "Expert", badge: "Architecture" },
+  { name: "React.js / React 19", category: "frontend", level: "Advanced", badge: "Core", power: 96 },
+  { name: "Next.js 15 (App Router)", category: "frontend", level: "Advanced", badge: "Core", power: 95 },
+  { name: "Tailwind CSS v4", category: "frontend", level: "Expert", badge: "Styling", power: 98 },
+  { name: "Zustand & Context API", category: "frontend", level: "Advanced", badge: "State", power: 92 },
+  { name: "Redux / Redux Toolkit", category: "frontend", level: "Intermediate", badge: "State", power: 88 },
+  { name: "Responsive & Mobile First", category: "frontend", level: "Expert", badge: "Architecture", power: 99 },
 
   // Languages
-  { name: "TypeScript", category: "languages", level: "Advanced", badge: "Type Safety" },
-  { name: "JavaScript (ES6+)", category: "languages", level: "Expert", badge: "Language" },
-  { name: "HTML5 & Semantic Web", category: "languages", level: "Expert", badge: "Structure" },
-  { name: "Modern CSS3", category: "languages", level: "Expert", badge: "Styling" },
-  { name: "C++ (Competitive)", category: "languages", level: "Intermediate", badge: "ICPC" },
-  { name: "Java", category: "languages", level: "Intermediate", badge: "OOP" },
+  { name: "TypeScript", category: "languages", level: "Advanced", badge: "Type Safety", power: 94 },
+  { name: "JavaScript (ES6+)", category: "languages", level: "Expert", badge: "Language", power: 98 },
+  { name: "HTML5 & Semantic Web", category: "languages", level: "Expert", badge: "Structure", power: 99 },
+  { name: "Modern CSS3", category: "languages", level: "Expert", badge: "Styling", power: 97 },
+  { name: "C++ (Competitive)", category: "languages", level: "Intermediate", badge: "ICPC", power: 85 },
+  { name: "Java", category: "languages", level: "Intermediate", badge: "OOP", power: 82 },
 
   // Backend
-  { name: "Node.js", category: "backend", level: "Advanced", badge: "Runtime" },
-  { name: "Express.js", category: "backend", level: "Advanced", badge: "Framework" },
-  { name: "MongoDB & Mongoose", category: "backend", level: "Advanced", badge: "Database" },
-  { name: "RESTful API Design", category: "backend", level: "Expert", badge: "APIs" },
-  { name: "JWT Auth & RBAC", category: "backend", level: "Advanced", badge: "Security" },
+  { name: "Node.js", category: "backend", level: "Advanced", badge: "Runtime", power: 90 },
+  { name: "Express.js", category: "backend", level: "Advanced", badge: "Framework", power: 91 },
+  { name: "MongoDB & Mongoose", category: "backend", level: "Advanced", badge: "Database", power: 90 },
+  { name: "RESTful API Design", category: "backend", level: "Expert", badge: "APIs", power: 95 },
+  { name: "JWT Auth & RBAC", category: "backend", level: "Advanced", badge: "Security", power: 92 },
 
   // Animation & Tools
-  { name: "GSAP (ScrollTrigger, quickTo)", category: "animation", level: "Advanced", badge: "Motion" },
-  { name: "Framer Motion", category: "animation", level: "Advanced", badge: "React Physics" },
-  { name: "Lenis Smooth Scroll", category: "animation", level: "Advanced", badge: "UX" },
-  { name: "Git, GitHub & Bitbucket", category: "animation", level: "Advanced", badge: "VCS" },
-  { name: "Postman & REST Testing", category: "animation", level: "Advanced", badge: "Testing" },
-  { name: "Figma to Code", category: "animation", level: "Advanced", badge: "Design" },
+  { name: "GSAP (ScrollTrigger, quickTo)", category: "animation", level: "Advanced", badge: "Motion", power: 95 },
+  { name: "Framer Motion", category: "animation", level: "Advanced", badge: "React Physics", power: 96 },
+  { name: "Lenis Smooth Scroll", category: "animation", level: "Advanced", badge: "UX", power: 97 },
+  { name: "Git, GitHub & Bitbucket", category: "animation", level: "Advanced", badge: "VCS", power: 94 },
+  { name: "Postman & REST Testing", category: "animation", level: "Advanced", badge: "Testing", power: 93 },
+  { name: "Figma to Code", category: "animation", level: "Advanced", badge: "Design", power: 94 },
 ];
 
 const CATEGORIES = [
@@ -63,11 +66,29 @@ const METHODOLOGIES = [
 ];
 
 export default function Skills() {
+  const { unlockQuest } = useGame();
   const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [equippedSkills, setEquippedSkills] = useState<string[]>([]);
 
   const filteredSkills = SKILLS_DATA.filter(
     (skill) => activeCategory === "all" || skill.category === activeCategory
   );
+
+  const handleCategorySelect = (catId: string) => {
+    setActiveCategory(catId);
+    gameAudio.playSelect();
+    unlockQuest("arsenal-scan");
+  };
+
+  const handleToggleEquip = (skillName: string) => {
+    gameAudio.playLaser();
+    setEquippedSkills((prev) =>
+      prev.includes(skillName)
+        ? prev.filter((s) => s !== skillName)
+        : [...prev, skillName]
+    );
+    unlockQuest("arsenal-scan");
+  };
 
   return (
     <section className="py-24 md:py-32 px-4 md:px-8 bg-surface relative overflow-hidden" id="skills">
@@ -78,13 +99,13 @@ export default function Skills() {
         <div className="text-center mb-14 space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass border border-secondary/30 text-secondary text-xs uppercase tracking-widest font-bold font-orbitron">
             <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-            Technical Matrix
+            Technical Matrix &amp; Equipment
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white font-orbitron">
             Skills &amp; <span className="text-gradient-secondary">Capabilities</span>
           </h2>
           <p className="text-on-surface-variant max-w-xl mx-auto text-sm sm:text-base">
-            Engineered with modern best practices, strict type safety, and 60-120 FPS animation principles.
+            Click on any skill card to <span className="text-secondary font-bold font-mono">EQUIP</span> it into your loadout!
           </p>
         </div>
 
@@ -95,7 +116,8 @@ export default function Skills() {
             return (
               <button
                 key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
+                onClick={() => handleCategorySelect(cat.id)}
+                onMouseEnter={() => gameAudio.playHover()}
                 className={`relative px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 font-orbitron cursor-pointer ${
                   isActive ? "text-white" : "text-on-surface-variant hover:text-white"
                 }`}
@@ -113,39 +135,82 @@ export default function Skills() {
           })}
         </div>
 
-        {/* Dynamic Skills Grid */}
+        {/* Dynamic Skills Grid with Equip Interaction */}
         <motion.div
           layout
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
         >
           <AnimatePresence mode="popLayout">
-            {filteredSkills.map((skill) => (
-              <motion.div
-                key={skill.name}
-                layout
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3 }}
-                className="p-5 rounded-xl glass-card border border-white/10 hover:border-secondary/40 flex items-center justify-between group"
-              >
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-secondary group-hover:scale-125 transition-transform"></span>
-                    <h3 className="text-sm sm:text-base font-bold text-white font-sans group-hover:text-secondary transition-colors">
-                      {skill.name}
-                    </h3>
-                  </div>
-                  <p className="text-[11px] text-on-surface-variant font-mono pl-4">
-                    Proficiency: {skill.level}
-                  </p>
-                </div>
+            {filteredSkills.map((skill) => {
+              const isEquipped = equippedSkills.includes(skill.name);
+              return (
+                <motion.div
+                  key={skill.name}
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                  onClick={() => handleToggleEquip(skill.name)}
+                  onMouseEnter={() => gameAudio.playHover()}
+                  className={`p-5 rounded-xl glass-card border transition-all cursor-pointer select-none group ${
+                    isEquipped
+                      ? "border-emerald-400 bg-emerald-500/10 shadow-[0_0_25px_rgba(52,211,153,0.3)]"
+                      : "border-white/10 hover:border-secondary/50"
+                  }`}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`w-2 h-2 rounded-full transition-transform ${
+                            isEquipped
+                              ? "bg-emerald-400 scale-125 shadow-[0_0_8px_#34d399]"
+                              : "bg-secondary group-hover:scale-125"
+                          }`}
+                        ></span>
+                        <h3 className="text-sm sm:text-base font-bold text-white font-sans group-hover:text-secondary transition-colors">
+                          {skill.name}
+                        </h3>
+                      </div>
+                      <p className="text-[11px] text-on-surface-variant font-mono pl-4">
+                        Proficiency: {skill.level}
+                      </p>
+                    </div>
 
-                <span className="text-[10px] uppercase font-mono font-bold tracking-wider px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-on-surface-variant group-hover:text-white group-hover:border-secondary/30 transition-colors">
-                  {skill.badge}
-                </span>
-              </motion.div>
-            ))}
+                    <span
+                      className={`text-[10px] uppercase font-mono font-bold tracking-wider px-2 py-0.5 rounded-md border transition-colors ${
+                        isEquipped
+                          ? "bg-emerald-500/20 text-emerald-300 border-emerald-400/40"
+                          : "bg-white/5 border-white/10 text-on-surface-variant group-hover:text-white"
+                      }`}
+                    >
+                      {isEquipped ? "EQUIPPED" : skill.badge}
+                    </span>
+                  </div>
+
+                  {/* Power Rating Gauge */}
+                  <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-xs font-mono">
+                    <span className="text-[10px] text-outline uppercase tracking-wider">
+                      STAT POWER
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <div className="w-16 h-1 bg-white/10 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full ${
+                            isEquipped ? "bg-emerald-400" : "bg-gradient-to-r from-secondary to-primary"
+                          }`}
+                          style={{ width: `${skill.power}%` }}
+                        />
+                      </div>
+                      <span className="text-[11px] font-bold text-white">
+                        {skill.power}
+                      </span>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         </motion.div>
 

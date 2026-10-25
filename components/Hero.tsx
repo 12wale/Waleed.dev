@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
+import { useGame } from "@/context/GameContext";
+import { gameAudio } from "@/lib/gameAudio";
 
 interface TerminalTab {
   id: string;
@@ -36,9 +38,33 @@ const TERMINAL_TABS: TerminalTab[] = [
     content: "STATUS: Available for Freelance Projects & Full-Time Software Engineering Roles (Cairo / Remote)",
     highlight: "Response time: < 24 hours",
   },
+  {
+    id: "game",
+    label: "🎮 bug_hunter.exe",
+    command: "./bug_hunter --start",
+    content: "Eliminate 5 system bugs to secure the codebase and earn +150 XP!",
+    highlight: "Interactive Web Terminal Mini-Game",
+  },
+];
+
+interface Bug {
+  id: number;
+  name: string;
+  icon: string;
+  x: number;
+  y: number;
+}
+
+const BUG_TYPES = [
+  { name: "404 Route Bug", icon: "🐛" },
+  { name: "Memory Leak", icon: "🪲" },
+  { name: "CORS Rejection", icon: "🕷️" },
+  { name: "Null Pointer", icon: "🐞" },
+  { name: "CSS Overflow", icon: "🦗" },
 ];
 
 export default function Hero() {
+  const { unlockQuest } = useGame();
   const heroRef = useRef<HTMLElement>(null);
   const shape1Ref = useRef<HTMLDivElement>(null);
   const shape2Ref = useRef<HTMLDivElement>(null);
@@ -48,12 +74,63 @@ export default function Hero() {
   const [activeTab, setActiveTab] = useState<string>("bio");
   const [copied, setCopied] = useState<boolean>(false);
 
+  // Mini-Game State
+  const [gameBugs, setGameBugs] = useState<Bug[]>([]);
+  const [bugsSquashed, setBugsSquashed] = useState<number>(0);
+  const [gameWon, setGameWon] = useState<boolean>(false);
+
+  const spawnBug = useCallback(() => {
+    const randomType = BUG_TYPES[Math.floor(Math.random() * BUG_TYPES.length)];
+    const newBug: Bug = {
+      id: Date.now() + Math.random(),
+      name: randomType.name,
+      icon: randomType.icon,
+      x: Math.floor(Math.random() * 80) + 10,
+      y: Math.floor(Math.random() * 65) + 15,
+    };
+    setGameBugs((prev) => [...prev.slice(-3), newBug]);
+  }, []);
+
+  // Spawn loop when game tab is active
+  useEffect(() => {
+    if (activeTab !== "game" || gameWon) return;
+
+    if (gameBugs.length === 0) {
+      spawnBug();
+    }
+
+    const interval = setInterval(() => {
+      spawnBug();
+    }, 1800);
+
+    return () => clearInterval(interval);
+  }, [activeTab, gameWon, gameBugs.length, spawnBug]);
+
+  const handleSquashBug = (bugId: number) => {
+    gameAudio.playLaser();
+    setGameBugs((prev) => prev.filter((b) => b.id !== bugId));
+    setBugsSquashed((prev) => {
+      const next = prev + 1;
+      if (next >= 5 && !gameWon) {
+        setGameWon(true);
+        unlockQuest("bug-slayer");
+      }
+      return next;
+    });
+  };
+
+  const restartGame = () => {
+    setBugsSquashed(0);
+    setGameWon(false);
+    setGameBugs([]);
+    gameAudio.playSelect();
+  };
+
   // 120 FPS GPU-accelerated mouse parallax via GSAP quickTo (0 React Re-renders!)
   useEffect(() => {
     const hero = heroRef.current;
     if (!hero) return;
 
-    // Direct GSAP quick setters
     const xTo1 = shape1Ref.current ? gsap.quickTo(shape1Ref.current, "x", { duration: 1.2, ease: "power2.out" }) : null;
     const yTo1 = shape1Ref.current ? gsap.quickTo(shape1Ref.current, "y", { duration: 1.2, ease: "power2.out" }) : null;
 
@@ -93,9 +170,16 @@ export default function Hero() {
 
   const currentTab = TERMINAL_TABS.find((t) => t.id === activeTab) || TERMINAL_TABS[0];
 
+  const handleTabClick = (tabId: string) => {
+    setActiveTab(tabId);
+    gameAudio.playSelect();
+    unlockQuest("boot-terminal");
+  };
+
   const handleCopy = () => {
     navigator.clipboard.writeText(currentTab.content);
     setCopied(true);
+    gameAudio.playSelect();
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -114,7 +198,6 @@ export default function Hero() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[45rem] h-[25rem] bg-tertiary/10 blur-[160px] rounded-full pointer-events-none -z-10"></div>
 
       {/* GPU Parallax Floating Tech Shapes */}
-      {/* React Square */}
       <div
         ref={shape1Ref}
         className="absolute top-[18%] left-[8%] w-24 h-24 md:w-36 md:h-36 rounded-2xl glass-card flex items-center justify-center rotate-12 shadow-[0_0_40px_rgba(189,157,255,0.2)] pointer-events-none z-10 group"
@@ -130,7 +213,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Node.js Circle */}
       <div
         ref={shape2Ref}
         className="absolute bottom-[16%] right-[8%] w-28 h-28 md:w-44 md:h-44 rounded-full glass-card flex items-center justify-center shadow-[0_0_50px_rgba(52,181,250,0.2)] pointer-events-none z-10 group"
@@ -146,7 +228,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Next.js Badge */}
       <div
         ref={shape3Ref}
         className="absolute top-[32%] right-[16%] w-16 h-16 md:w-24 md:h-24 rounded-xl glass-card flex items-center justify-center -rotate-12 shadow-[0_0_35px_rgba(189,157,255,0.25)] pointer-events-none z-10 group"
@@ -162,7 +243,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* TypeScript / JS Badge */}
       <div
         ref={shape4Ref}
         className="absolute bottom-[28%] left-[14%] w-16 h-16 md:w-24 md:h-24 rounded-2xl glass-card hidden md:flex items-center justify-center rotate-6 shadow-[0_0_35px_rgba(234,179,8,0.2)] pointer-events-none z-10 group"
@@ -192,7 +272,7 @@ export default function Hero() {
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
           <span className="text-xs uppercase tracking-widest font-bold text-on-surface font-orbitron">
-            Available for Projects &amp; Roles
+            Player Status: Ready for Deployments
           </span>
         </motion.div>
 
@@ -216,7 +296,7 @@ export default function Hero() {
           Frontend Engineer &amp; Full-Stack MERN Developer specializing in high-speed, interactive web experiences with <span className="text-white font-semibold">React</span>, <span className="text-white font-semibold">Next.js 15</span>, and <span className="text-primary font-semibold">GSAP animations</span>.
         </motion.p>
 
-        {/* Interactive Multi-Tab Cyber Terminal */}
+        {/* Interactive Multi-Tab Cyber Terminal + Bug Hunter Mini-Game */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -237,10 +317,11 @@ export default function Hero() {
               {TERMINAL_TABS.map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`px-3 py-1 text-xs font-mono rounded-md transition-all ${
+                  onClick={() => handleTabClick(tab.id)}
+                  onMouseEnter={() => gameAudio.playHover()}
+                  className={`px-3 py-1 text-xs font-mono rounded-md transition-all cursor-pointer ${
                     activeTab === tab.id
-                      ? "bg-primary/20 text-primary border border-primary/40 font-bold"
+                      ? "bg-primary/20 text-primary border border-primary/40 font-bold shadow-[0_0_10px_rgba(189,157,255,0.25)]"
                       : "text-on-surface-variant hover:text-white hover:bg-white/5"
                   }`}
                 >
@@ -261,27 +342,95 @@ export default function Hero() {
           </div>
 
           {/* Terminal Body */}
-          <div className="p-5 font-mono text-xs sm:text-sm bg-[#050b18]/90 min-h-[130px] flex flex-col justify-between">
+          <div className="p-5 font-mono text-xs sm:text-sm bg-[#050b18]/90 min-h-[160px] flex flex-col justify-between relative overflow-hidden">
             <AnimatePresence mode="wait">
-              <motion.div
-                key={currentTab.id}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.2 }}
-                className="space-y-2.5"
-              >
-                <div className="flex items-center gap-2 text-primary">
-                  <span className="text-secondary">❯</span>
-                  <span className="font-bold">{currentTab.command}</span>
-                </div>
-                <pre className="text-white whitespace-pre-wrap leading-relaxed font-mono">
-                  {currentTab.content}
-                </pre>
-                <div className="pt-2 text-xs text-emerald-400 font-medium">
-                  ✦ {currentTab.highlight}
-                </div>
-              </motion.div>
+              {activeTab === "game" ? (
+                /* Bug Hunter Mini-Game Arena */
+                <motion.div
+                  key="arcade"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="relative w-full h-[150px] flex flex-col justify-between"
+                >
+                  <div className="flex items-center justify-between text-xs font-mono border-b border-white/10 pb-2">
+                    <span className="text-emerald-400 font-bold flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                      BUG HUNTER ARENA
+                    </span>
+                    <span className="text-secondary font-bold">
+                      Squashed: {bugsSquashed}/5
+                    </span>
+                  </div>
+
+                  {gameWon ? (
+                    <div className="flex flex-col items-center justify-center py-3 text-center space-y-2">
+                      <p className="text-sm font-bold text-emerald-300 font-orbitron">
+                        🏆 SYSTEM SECURED! +150 XP EARNED
+                      </p>
+                      <p className="text-xs text-on-surface-variant font-sans">
+                        All critical bugs eliminated. Codebase is 100% bug-free!
+                      </p>
+                      <button
+                        onClick={restartGame}
+                        className="px-4 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold font-mono hover:bg-emerald-500/30 transition-all cursor-pointer"
+                      >
+                        Play Again
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="relative w-full h-[90px] overflow-hidden">
+                        {gameBugs.map((bug) => (
+                          <motion.button
+                            key={bug.id}
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0, opacity: 0 }}
+                            whileHover={{ scale: 1.25 }}
+                            whileTap={{ scale: 0.8 }}
+                            onClick={() => handleSquashBug(bug.id)}
+                            style={{
+                              position: "absolute",
+                              left: `${bug.x}%`,
+                              top: `${bug.y}%`,
+                            }}
+                            className="px-2.5 py-1 rounded-full bg-rose-500/20 border border-rose-400/50 text-xs flex items-center gap-1 hover:bg-rose-500/40 shadow-[0_0_15px_rgba(244,63,94,0.4)] cursor-crosshair animate-pulse"
+                          >
+                            <span>{bug.icon}</span>
+                            <span className="text-[10px] text-white font-mono">{bug.name}</span>
+                          </motion.button>
+                        ))}
+                      </div>
+
+                      <p className="text-[11px] text-outline text-center">
+                        ⚡ Click the rogue bugs to zap them before they crash the app!
+                      </p>
+                    </>
+                  )}
+                </motion.div>
+              ) : (
+                /* Regular Terminal Output */
+                <motion.div
+                  key={currentTab.id}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-2.5"
+                >
+                  <div className="flex items-center gap-2 text-primary">
+                    <span className="text-secondary">❯</span>
+                    <span className="font-bold">{currentTab.command}</span>
+                  </div>
+                  <pre className="text-white whitespace-pre-wrap leading-relaxed font-mono">
+                    {currentTab.content}
+                  </pre>
+                  <div className="pt-2 text-xs text-emerald-400 font-medium">
+                    ✦ {currentTab.highlight}
+                  </div>
+                </motion.div>
+              )}
             </AnimatePresence>
           </div>
         </motion.div>
@@ -295,7 +444,9 @@ export default function Hero() {
         >
           <Link
             href="#projects"
-            className="group relative px-8 py-4 bg-gradient-to-r from-primary to-secondary rounded-xl text-surface font-extrabold text-sm uppercase tracking-wider font-orbitron transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(189,157,255,0.7)] flex items-center justify-center gap-2 w-full sm:w-auto overflow-hidden"
+            onMouseEnter={() => gameAudio.playHover()}
+            onClick={() => gameAudio.playSelect()}
+            className="group relative px-8 py-4 bg-gradient-to-r from-primary to-secondary rounded-xl text-surface font-extrabold text-sm uppercase tracking-wider font-orbitron transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(189,157,255,0.7)] flex items-center justify-center gap-2 w-full sm:w-auto overflow-hidden cursor-pointer"
           >
             <span>Explore Projects</span>
             <span className="material-symbols-outlined text-lg group-hover:translate-x-1.5 transition-transform duration-300">
@@ -306,7 +457,9 @@ export default function Hero() {
           <a
             href="/Waleed_Refaat_CV_Updated.pdf"
             download="Waleed_Refaat_CV.pdf"
-            className="group px-8 py-4 rounded-xl glass text-white font-bold text-sm uppercase tracking-wider font-orbitron border border-white/20 hover:border-primary/50 hover:bg-white/5 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 w-full sm:w-auto"
+            onMouseEnter={() => gameAudio.playHover()}
+            onClick={() => gameAudio.playSelect()}
+            className="group px-8 py-4 rounded-xl glass text-white font-bold text-sm uppercase tracking-wider font-orbitron border border-white/20 hover:border-primary/50 hover:bg-white/5 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer"
           >
             <span className="material-symbols-outlined text-lg text-secondary group-hover:translate-y-0.5 transition-transform">
               download
