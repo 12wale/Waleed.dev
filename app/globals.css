@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Orbitron:wght@400..900&family=Space+Grotesk:wght@500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 @import "tailwindcss";
 
@@ -56,35 +56,104 @@
   --color-surface-dim: #060e20;
 
   --radius-DEFAULT: 1rem;
-  --radius-lg: 2rem;
-  --radius-xl: 3rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2.5rem;
   --radius-full: 9999px;
 
-  --font-headline: var(--font-orbitron);
-  --font-body: var(--font-orbitron);
-  --font-label: var(--font-orbitron);
+  --font-headline: 'Orbitron', sans-serif;
+  --font-display: 'Orbitron', sans-serif;
   --font-orbitron: 'Orbitron', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
 body {
-  font-family: 'Orbitron', sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   background-color: #060e20;
   color: #dee5ff;
+  letter-spacing: -0.01em;
 }
 
+h1, h2, h3, .font-orbitron {
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 0.02em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #060e20;
+}
+::-webkit-scrollbar-thumb {
+  background: #192540;
+  border-radius: 9999px;
+  border: 2px solid #060e20;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8a4cfc;
+}
+
+/* Glassmorphism Styles */
 .glass {
-  background: rgba(25, 37, 64, 0.4);
+  background: rgba(15, 25, 48, 0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(163, 170, 196, 0.12);
+}
+
+.glass-card {
+  background: linear-gradient(135deg, rgba(25, 37, 64, 0.5) 0%, rgba(9, 19, 40, 0.6) 100%);
   backdrop-filter: blur(24px);
-  border: 1px solid rgba(64, 72, 93, 0.15);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(189, 157, 255, 0.15);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(189, 157, 255, 0.35);
+  box-shadow: 0 25px 50px -12px rgba(138, 76, 252, 0.25);
+}
+
+.glass-pill {
+  background: rgba(15, 25, 48, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(163, 170, 196, 0.18);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(189, 157, 255, 0.08);
 }
 
 .neon-text-glow {
-  text-shadow: 0 0 15px rgba(189, 157, 255, 0.4);
+  text-shadow: 0 0 20px rgba(189, 157, 255, 0.5), 0 0 40px rgba(52, 181, 250, 0.2);
+}
+
+.neon-border-hover {
+  transition: all 0.3s ease;
 }
 
 .neon-border-hover:hover {
-  border-top: 2px solid #34b5fa;
-  box-shadow: 0 0 40px rgba(138, 76, 252, 0.08);
+  border-color: rgba(52, 181, 250, 0.6);
+  box-shadow: 0 0 30px rgba(138, 76, 252, 0.15), 0 0 10px rgba(52, 181, 250, 0.2);
+}
+
+.mesh-gradient {
+  background: radial-gradient(at 0% 0%, rgba(189, 157, 255, 0.15) 0px, transparent 50%),
+              radial-gradient(at 100% 0%, rgba(52, 181, 250, 0.15) 0px, transparent 50%),
+              radial-gradient(at 100% 100%, rgba(255, 142, 172, 0.1) 0px, transparent 50%),
+              radial-gradient(at 0% 100%, rgba(138, 76, 252, 0.15) 0px, transparent 50%);
+}
+
+.text-gradient-primary {
+  background: linear-gradient(135deg, #ffffff 20%, #bd9dff 70%, #34b5fa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-secondary {
+  background: linear-gradient(135deg, #34b5fa 0%, #bd9dff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .radial-spotlight {
@@ -99,6 +168,6 @@ body {
 .scrolling-grid {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAABnSURBVHja7M5RDYAwDEXRDgmvEocnlrQS2SwUFST9uEfBGWs9c97nbGtDcquqiKhOImLs/UpuzVzWEi1atGjRokWLFi1atGjRokWLFi1atGjRokWLFi1af7Ukz8xWp8z8AAAA//8DAJ4LoEAAlL1nAAAAAElFTkSuQmCC");
   background-repeat: repeat;
-  animation: bg-scrolling-horizontal 2s infinite linear;
-  filter: invert(1) brightness(1.5) opacity(0.6);
+  animation: bg-scrolling-horizontal 30s infinite linear;
+  filter: invert(1) brightness(1.5) opacity(0.3);
 }

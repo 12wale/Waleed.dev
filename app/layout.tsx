@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import AosInit from "@/components/AosInit";
 import Tracker from "@/components/Tracker";
+import SmoothScroll from "@/components/SmoothScroll";
 
 export const metadata: Metadata = {
   title: "Waleed Refaat Abbas | Frontend Developer",
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased dark scroll-smooth overflow-x-hidden">
       <body className="min-h-full flex flex-col w-full overflow-x-hidden text-on-surface selection:bg-primary selection:text-on-primary">
+        <SmoothScroll />
         <AosInit />
         <Tracker />
         {children}

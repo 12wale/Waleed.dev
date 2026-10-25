@@ -1,108 +1,142 @@
+"use client";
+
+import { motion } from "framer-motion";
+
+const ACTIVITIES = [
+  {
+    icon: "groups",
+    color: "primary",
+    accent: "text-primary",
+    border: "border-primary/40",
+    bg: "bg-primary/10",
+    title: "Head of Frontend Team – GDSC",
+    subtitle: "Google Developer Student Clubs · Fayoum University",
+    period: "Nov 2025 – Present",
+    bullets: [
+      "Leading and mentoring a team of student developers in modern frontend frameworks (React, Next.js, Tailwind CSS).",
+      "Organizing technical workshops, code labs, and hackathon readiness initiatives across the university.",
+    ],
+  },
+  {
+    icon: "terminal",
+    color: "secondary",
+    accent: "text-secondary",
+    border: "border-secondary/40",
+    bg: "bg-secondary/10",
+    title: "ICPC Competitive Programming Trainee",
+    subtitle: "Fayoum University Community",
+    period: "Nov 2023 – Present",
+    bullets: [
+      "Intensive algorithmic problem-solving training focusing on graphs, dynamic programming, and advanced data structures.",
+      "Sharpened algorithmic speed and analytical optimization skills applicable to high-scale web performance.",
+    ],
+  },
+  {
+    icon: "military_tech",
+    color: "tertiary",
+    accent: "text-tertiary",
+    border: "border-tertiary/40",
+    bg: "bg-tertiary/10",
+    title: "Leadership & Strategy Training",
+    subtitle: "Professional Development Camp · Fayoum, Egypt",
+    period: "Aug 2024",
+    bullets: [
+      "Completed intensive leadership simulation exercises, team dynamics, conflict resolution, and agile project delivery.",
+    ],
+  },
+];
+
 export default function Extracurricular() {
-  const activities = [
-    {
-      icon: "groups",
-      color: "primary",
-      title: "Head of Frontend Team – GDSC",
-      subtitle: "Google Developer Student Clubs · Fayoum University",
-      period: "Nov 2025 – Present",
-      bullets: [
-        "Leading a frontend team and mentoring members on React.js, Next.js, and Tailwind CSS.",
-        "Organizing technical workshops to grow the local developer community at Fayoum University.",
-      ],
-    },
-    {
-      icon: "code",
-      color: "secondary",
-      title: "ICPC Competitive Programming Trainee",
-      subtitle: "Fayoum, Egypt",
-      period: "Nov 2023",
-      bullets: [
-        "Trained in algorithmic problem-solving and advanced data structures for the International Collegiate Programming Contest.",
-      ],
-    },
-    {
-      icon: "military_tech",
-      color: "tertiary",
-      title: "Leadership Training Camp – Member",
-      subtitle: "Fayoum, Egypt",
-      period: "Aug 2024",
-      bullets: [
-        "Completed an intensive program focused on leadership skills, team management, and professional readiness.",
-      ],
-    },
-  ];
-
-  const colorMap: Record<string, string> = {
-    primary: "border-primary text-primary bg-primary/10 shadow-[0_0_15px_rgba(189,157,255,0.1)]",
-    secondary: "border-secondary text-secondary bg-secondary/10 shadow-[0_0_15px_rgba(23,168,236,0.1)]",
-    tertiary: "border-tertiary text-tertiary bg-tertiary/10 shadow-[0_0_15px_rgba(255,151,178,0.1)]",
-  };
-
-  const dotColorMap: Record<string, string> = {
-    primary: "text-primary",
-    secondary: "text-secondary",
-    tertiary: "text-tertiary",
-  };
-
   return (
-    <section className="py-16 md:py-24 px-4 md:px-8 bg-surface border-y border-outline-variant/10" id="activities">
+    <section className="py-24 md:py-32 px-4 md:px-8 bg-surface border-y border-white/5 relative" id="activities">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12 md:mb-16 space-y-4" data-aos="fade-down">
-          <span className="text-tertiary label-md uppercase tracking-widest font-bold">Beyond the Code</span>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-white">Extracurricular Activities</h2>
-          <p className="text-base md:text-lg text-on-surface-variant max-w-xl mx-auto">Leadership, community building, and competitive excellence outside the workplace.</p>
+        <div className="text-center mb-16 space-y-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass border border-tertiary/30 text-tertiary text-xs uppercase tracking-widest font-bold font-orbitron">
+            <span className="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+            Beyond the Code
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white font-orbitron">
+            Extracurricular <span className="text-gradient-primary">Leadership</span>
+          </h2>
+          <p className="text-on-surface-variant max-w-xl mx-auto text-sm sm:text-base">
+            Technical leadership, competitive programming, and developer community mentorship.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-          {activities.map((activity, index) => (
-            <div
+        {/* Activities Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          {ACTIVITIES.map((activity, index) => (
+            <motion.div
               key={activity.title}
-              data-aos="fade-up"
-              data-aos-delay={index * 100}
-              className="glass p-6 md:p-8 rounded-lg border-l-4 hover:-translate-y-1 transition-all duration-300 flex flex-col gap-4"
-              style={{ borderLeftColor: "var(--color-" + activity.color + ")" }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.12, duration: 0.5 }}
+              className={`p-6 sm:p-8 rounded-2xl glass-card border border-white/10 hover:${activity.border} transition-all duration-300 flex flex-col justify-between`}
             >
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center ${colorMap[activity.color].split(" ").slice(2).join(" ")}`}>
-                <span className={`material-symbols-outlined ${dotColorMap[activity.color]}`}>{activity.icon}</span>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className={`text-xs font-mono font-bold uppercase tracking-wider ${activity.accent}`}>
+                    {activity.period}
+                  </span>
+                  <div className={`w-12 h-12 rounded-xl ${activity.bg} flex items-center justify-center`}>
+                    <span className={`material-symbols-outlined text-2xl ${activity.accent}`}>
+                      {activity.icon}
+                    </span>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg sm:text-xl font-bold text-white font-orbitron leading-snug">
+                    {activity.title}
+                  </h3>
+                  <p className={`text-xs font-medium mt-1 ${activity.accent}`}>
+                    {activity.subtitle}
+                  </p>
+                </div>
+
+                <ul className="space-y-2 pt-2 border-t border-white/10 text-xs sm:text-sm text-on-surface">
+                  {activity.bullets.map((b) => (
+                    <li key={b} className="flex items-start gap-2">
+                      <span className={`${activity.accent} mt-0.5`}>▹</span>
+                      <span className="leading-relaxed">{b}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div>
-                <span className={`text-xs font-bold uppercase tracking-widest mb-1 block ${dotColorMap[activity.color]}`}>{activity.period}</span>
-                <h3 className="text-lg md:text-xl font-bold text-white leading-snug">{activity.title}</h3>
-                <p className={`text-sm font-medium mt-0.5 ${dotColorMap[activity.color]}`}>{activity.subtitle}</p>
-              </div>
-              <ul className="text-xs md:text-sm text-on-surface-variant space-y-2 mt-auto">
-                {activity.bullets.map((b) => (
-                  <li key={b} className="flex gap-2">
-                    <span className={dotColorMap[activity.color]}>•</span>
-                    {b}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        {/* Languages spoken */}
-        <div className="mt-10 glass p-6 md:p-8 rounded-lg">
-          <h3 className="text-sm uppercase tracking-widest text-outline font-bold mb-5">Languages Spoken</h3>
+        {/* Spoken Languages Bar */}
+        <div className="mt-12 p-6 sm:p-8 rounded-2xl glass-card border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div>
+            <h3 className="text-sm uppercase tracking-widest text-white font-bold font-orbitron">
+              Spoken Languages
+            </h3>
+            <p className="text-xs text-on-surface-variant mt-1">
+              Fluent communication in international collaborative environments.
+            </p>
+          </div>
+
           <div className="flex flex-wrap gap-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <span className="material-symbols-outlined text-primary text-base">language</span>
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <span className="material-symbols-outlined text-primary text-xl">language</span>
               </div>
               <div>
-                <p className="font-bold text-white text-sm">Arabic</p>
-                <p className="text-xs text-on-surface-variant">Native</p>
+                <p className="font-bold text-white text-sm font-sans">Arabic</p>
+                <p className="text-xs text-on-surface-variant font-mono">Native Tongue</p>
               </div>
             </div>
+
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center">
-                <span className="material-symbols-outlined text-secondary text-base">translate</span>
+              <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center">
+                <span className="material-symbols-outlined text-secondary text-xl">translate</span>
               </div>
               <div>
-                <p className="font-bold text-white text-sm">English</p>
-                <p className="text-xs text-on-surface-variant">Upper Intermediate (B2)</p>
+                <p className="font-bold text-white text-sm font-sans">English</p>
+                <p className="text-xs text-on-surface-variant font-mono">Upper Intermediate (B2)</p>
               </div>
             </div>
           </div>

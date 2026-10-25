@@ -1,100 +1,127 @@
 "use client";
-import { useEffect, useState } from "react";
-import Image from "next/image";
 
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { gsap } from "gsap";
+
+interface TerminalTab {
+  id: string;
+  label: string;
+  command: string;
+  content: string;
+  highlight: string;
+}
+
+const TERMINAL_TABS: TerminalTab[] = [
+  {
+    id: "bio",
+    label: "bio.sh",
+    command: "whoami --focus",
+    content: "Building high-performance web apps with React, Next.js 15, TypeScript & modern motion design.",
+    highlight: "Frontend Lead @ GDSC · ICPC Trainee · LevelUp ESG Intern",
+  },
+  {
+    id: "stack",
+    label: "stack.json",
+    command: "cat core-stack.json",
+    content: '{\n  "frontend": ["Next.js", "React.js", "TypeScript", "Tailwind CSS"],\n  "animation": ["GSAP", "Framer Motion", "Lenis"],\n  "backend": ["Node.js", "Express.js", "MongoDB", "REST APIs"]\n}',
+    highlight: "100% committed to 60-120 FPS buttery-smooth experiences.",
+  },
+  {
+    id: "status",
+    label: "status.log",
+    command: "curl -s status.waleed.dev",
+    content: "STATUS: Available for Freelance Projects & Full-Time Software Engineering Roles (Cairo / Remote)",
+    highlight: "Response time: < 24 hours",
+  },
+];
 
 export default function Hero() {
-  const [mounted, setMounted] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  
-  // Terminal typing effect state
-  const fullText = "Building responsive, high-performance web apps with React.js, Next.js & the MERN stack.";
-  const [displayedText, setDisplayedText] = useState("");
-  const [isTypingComplete, setIsTypingComplete] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+  const shape1Ref = useRef<HTMLDivElement>(null);
+  const shape2Ref = useRef<HTMLDivElement>(null);
+  const shape3Ref = useRef<HTMLDivElement>(null);
+  const shape4Ref = useRef<HTMLDivElement>(null);
 
+  const [activeTab, setActiveTab] = useState<string>("bio");
+  const [copied, setCopied] = useState<boolean>(false);
+
+  // 120 FPS GPU-accelerated mouse parallax via GSAP quickTo (0 React Re-renders!)
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-    
+    const hero = heroRef.current;
+    if (!hero) return;
+
+    // Direct GSAP quick setters
+    const xTo1 = shape1Ref.current ? gsap.quickTo(shape1Ref.current, "x", { duration: 1.2, ease: "power2.out" }) : null;
+    const yTo1 = shape1Ref.current ? gsap.quickTo(shape1Ref.current, "y", { duration: 1.2, ease: "power2.out" }) : null;
+
+    const xTo2 = shape2Ref.current ? gsap.quickTo(shape2Ref.current, "x", { duration: 1.6, ease: "power2.out" }) : null;
+    const yTo2 = shape2Ref.current ? gsap.quickTo(shape2Ref.current, "y", { duration: 1.6, ease: "power2.out" }) : null;
+
+    const xTo3 = shape3Ref.current ? gsap.quickTo(shape3Ref.current, "x", { duration: 0.9, ease: "power3.out" }) : null;
+    const yTo3 = shape3Ref.current ? gsap.quickTo(shape3Ref.current, "y", { duration: 0.9, ease: "power3.out" }) : null;
+
+    const xTo4 = shape4Ref.current ? gsap.quickTo(shape4Ref.current, "x", { duration: 1.4, ease: "power2.out" }) : null;
+    const yTo4 = shape4Ref.current ? gsap.quickTo(shape4Ref.current, "y", { duration: 1.4, ease: "power2.out" }) : null;
+
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 30 - 15,
-        y: (e.clientY / window.innerHeight) * 30 - 15,
-      });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    
-    // Infinite looping typing effect logic
-    let currentIndex = 0;
-    let isDeleting = false;
-    let typingTimer: NodeJS.Timeout;
+      const rect = hero.getBoundingClientRect();
+      const relX = (e.clientX - rect.left) / rect.width - 0.5;
+      const relY = (e.clientY - rect.top) / rect.height - 0.5;
 
-    const typeLoop = () => {
-      setDisplayedText(fullText.substring(0, currentIndex));
+      xTo1?.(relX * -45);
+      yTo1?.(relY * -45);
 
-      if (!isDeleting && currentIndex < fullText.length) {
-        // Typing forward
-        currentIndex++;
-        setIsTypingComplete(false);
-        typingTimer = setTimeout(typeLoop, 50);
-      } else if (!isDeleting && currentIndex === fullText.length) {
-        // Pause at the end
-        setIsTypingComplete(true);
-        isDeleting = true;
-        typingTimer = setTimeout(typeLoop, 3000); // Wait 3 seconds before deleting
-      } else if (isDeleting && currentIndex > 0) {
-        // Deleting backwards
-        currentIndex--;
-        setIsTypingComplete(false);
-        typingTimer = setTimeout(typeLoop, 20); // Delete faster
-      } else if (isDeleting && currentIndex === 0) {
-        // Pause before typing again
-        isDeleting = false;
-        typingTimer = setTimeout(typeLoop, 500); // Wait half a second before starting again
-      }
+      xTo2?.(relX * 55);
+      yTo2?.(relY * 55);
+
+      xTo3?.(relX * 80);
+      yTo3?.(relY * 80);
+
+      xTo4?.(relX * -60);
+      yTo4?.(relY * -60);
     };
 
-    // Start the loop
-    typingTimer = setTimeout(typeLoop, 500);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      clearTimeout(typingTimer);
     };
   }, []);
 
-  // Return a static placeholder or null until mounted to avoid hydration mismatch
-  // However, we want to keep the layout stable, so we just avoid the interactive parts
-  const transformStyle = mounted 
-    ? { transform: `translate(${mousePosition.x * -2}px, ${mousePosition.y * -2}px) rotate(12deg)` }
-    : { transform: `rotate(12deg)` };
+  const currentTab = TERMINAL_TABS.find((t) => t.id === activeTab) || TERMINAL_TABS[0];
 
-  const transformStyleNode = mounted
-    ? { transform: `translate(${mousePosition.x * 3}px, ${mousePosition.y * 3}px)` }
-    : {};
-
-  const transformStyleNext = mounted
-    ? { transform: `translate(${mousePosition.x * 5}px, ${mousePosition.y * 5}px) rotate(-15deg)` }
-    : { transform: `rotate(-15deg)` };
-
-  const transformStyleJS = mounted
-    ? { transform: `translate(${mousePosition.x * -4}px, ${mousePosition.y * -4}px) rotate(-10deg)` }
-    : { transform: `rotate(-10deg)` };
+  const handleCopy = () => {
+    navigator.clipboard.writeText(currentTab.content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 md:px-8 overflow-hidden bg-surface" id="hero">
-      {/* Infinite Scrolling Grid Pattern over the background */}
-      <div className="absolute inset-0 z-0 pointer-events-none scrolling-grid opacity-50"></div>
-      
-      {/* Interactive Floating Glass Shapes with Icons */}
-      {/* Shape 1: React Square */}
-      <div 
-        className="absolute top-[20%] left-[10%] w-32 h-32 md:w-48 md:h-48 bg-primary/10 rounded-2xl backdrop-blur-lg border border-primary/20 transition-transform duration-700 ease-out shadow-[0_0_50px_rgba(189,157,255,0.2)] rotate-12 flex items-center justify-center group/shape"
-        style={transformStyle}
+    <section
+      ref={heroRef}
+      id="hero"
+      className="relative min-h-screen flex items-center justify-center px-4 md:px-8 pt-28 pb-16 overflow-hidden bg-surface"
+    >
+      {/* Background Scrolling Grid Pattern */}
+      <div className="absolute inset-0 z-0 pointer-events-none scrolling-grid opacity-25"></div>
+
+      {/* Ambient Mesh Glow Orbs */}
+      <div className="absolute -top-32 -left-32 w-[35rem] h-[35rem] bg-primary/20 blur-[140px] rounded-full pointer-events-none -z-10 animate-pulse duration-1000"></div>
+      <div className="absolute -bottom-32 -right-32 w-[35rem] h-[35rem] bg-secondary/15 blur-[140px] rounded-full pointer-events-none -z-10"></div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[45rem] h-[25rem] bg-tertiary/10 blur-[160px] rounded-full pointer-events-none -z-10"></div>
+
+      {/* GPU Parallax Floating Tech Shapes */}
+      {/* React Square */}
+      <div
+        ref={shape1Ref}
+        className="absolute top-[18%] left-[8%] w-24 h-24 md:w-36 md:h-36 rounded-2xl glass-card flex items-center justify-center rotate-12 shadow-[0_0_40px_rgba(189,157,255,0.2)] pointer-events-none z-10 group"
+        style={{ willChange: "transform" }}
       >
-        <div className="relative w-16 h-16 md:w-24 md:h-24 opacity-40 group-hover/shape:opacity-80 transition-opacity filter grayscale brightness-200 contrast-125">
-          <Image 
+        <div className="relative w-12 h-12 md:w-20 md:h-20 opacity-70 group-hover:opacity-100 transition-opacity">
+          <Image
             src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
             alt="React"
             fill
@@ -102,14 +129,15 @@ export default function Hero() {
           />
         </div>
       </div>
-      
-      {/* Shape 2: Node.js Circle */}
-      <div 
-        className="absolute bottom-[15%] right-[10%] w-40 h-40 md:w-64 md:h-64 bg-secondary/10 rounded-full backdrop-blur-xl border border-secondary/20 transition-transform duration-1000 ease-out shadow-[0_0_60px_rgba(255,255,255,0.1)] flex items-center justify-center group/shape"
-        style={transformStyleNode}
+
+      {/* Node.js Circle */}
+      <div
+        ref={shape2Ref}
+        className="absolute bottom-[16%] right-[8%] w-28 h-28 md:w-44 md:h-44 rounded-full glass-card flex items-center justify-center shadow-[0_0_50px_rgba(52,181,250,0.2)] pointer-events-none z-10 group"
+        style={{ willChange: "transform" }}
       >
-        <div className="relative w-20 h-20 md:w-32 md:h-32 opacity-30 group-hover/shape:opacity-70 transition-opacity filter grayscale brightness-200">
-          <Image 
+        <div className="relative w-14 h-14 md:w-24 md:h-24 opacity-60 group-hover:opacity-100 transition-opacity">
+          <Image
             src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg"
             alt="Node.js"
             fill
@@ -117,14 +145,15 @@ export default function Hero() {
           />
         </div>
       </div>
-      
-      {/* Shape 3: Next.js Small floating accent */}
-      <div 
-        className="absolute top-[40%] right-[25%] w-12 h-12 md:w-20 md:h-20 bg-blue-500/20 rounded-lg backdrop-blur-md border border-blue-400/30 transition-transform duration-500 ease-out shadow-[0_0_30px_rgba(59,130,246,0.3)] flex items-center justify-center group/shape"
-        style={transformStyleNext}
+
+      {/* Next.js Badge */}
+      <div
+        ref={shape3Ref}
+        className="absolute top-[32%] right-[16%] w-16 h-16 md:w-24 md:h-24 rounded-xl glass-card flex items-center justify-center -rotate-12 shadow-[0_0_35px_rgba(189,157,255,0.25)] pointer-events-none z-10 group"
+        style={{ willChange: "transform" }}
       >
-        <div className="relative w-8 h-8 md:w-12 md:h-12 opacity-40 group-hover/shape:opacity-90 transition-opacity filter invert brightness-200">
-          <Image 
+        <div className="relative w-9 h-9 md:w-14 md:h-14 opacity-75 group-hover:opacity-100 transition-opacity filter invert">
+          <Image
             src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg"
             alt="Next.js"
             fill
@@ -133,66 +162,159 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Shape 4: JS floating accent */}
-      <div 
-        className="absolute bottom-[25%] left-[20%] w-16 h-16 md:w-24 md:h-24 bg-yellow-500/10 rounded-xl backdrop-blur-md border border-yellow-400/20 transition-transform duration-800 ease-out shadow-[0_0_40px_rgba(234,179,8,0.2)] hidden lg:flex items-center justify-center group/shape"
-        style={transformStyleJS}
+      {/* TypeScript / JS Badge */}
+      <div
+        ref={shape4Ref}
+        className="absolute bottom-[28%] left-[14%] w-16 h-16 md:w-24 md:h-24 rounded-2xl glass-card hidden md:flex items-center justify-center rotate-6 shadow-[0_0_35px_rgba(234,179,8,0.2)] pointer-events-none z-10 group"
+        style={{ willChange: "transform" }}
       >
-        <div className="relative w-10 h-10 md:w-14 md:h-14 opacity-30 group-hover/shape:opacity-80 transition-opacity filter grayscale brightness-200">
-          <Image 
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
-            alt="JavaScript"
+        <div className="relative w-9 h-9 md:w-12 md:h-12 opacity-70 group-hover:opacity-100 transition-opacity">
+          <Image
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"
+            alt="TypeScript"
             fill
             className="object-contain"
           />
         </div>
       </div>
 
-      {/* Glow effects */}
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary-dim opacity-20 blur-[120px] rounded-full pointer-events-none"></div>
-      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-secondary-dim opacity-20 blur-[120px] rounded-full pointer-events-none"></div>
-      
-      <div className="relative z-10 text-center max-w-4xl px-4 mt-16 md:mt-0 w-full">
-        <span className="inline-block label-md uppercase tracking-[0.2em] text-secondary font-bold mb-6 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] hover:scale-105 transition-transform cursor-default">
-          MERN Stack Developer
-        </span>
-        <h1 className="text-2xl sm:text-4xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter mb-8 text-white leading-[1.1] md:leading-[0.9] drop-shadow-2xl">
-          Waleed Refaat Abbas
-        </h1>
-        
-        {/* Terminal Window Description */}
-        <div className="font-mono text-sm md:text-lg text-green-400 mb-12 max-w-2xl mx-auto text-left bg-[#050b14]/80 p-4 md:p-6 rounded-lg border border-outline-variant/30 shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-md">
-          <div className="flex items-center gap-2 mb-3 text-outline-variant border-b border-outline-variant/20 pb-3">
-            <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
-            <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-            <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
-            <span className="text-xs ml-2 text-[#a3aac4]">guest@waleed-dev:~$</span>
-          </div>
-          <div className="leading-relaxed break-all whitespace-pre-wrap">
-            <span className="text-blue-400 font-bold">echo</span> <span className="text-white">&quot;{displayedText}&quot;</span>
-            <span className={`inline-block w-2 h-5 bg-green-400 ml-1 align-middle ${isTypingComplete ? 'animate-pulse' : ''}`}></span>
-          </div>
-        </div>
+      {/* Main Hero Content */}
+      <div className="relative z-20 text-center max-w-4xl mx-auto w-full flex flex-col items-center">
+        {/* Availability Pill */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full glass-pill mb-6 border border-primary/30"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span className="text-xs uppercase tracking-widest font-bold text-on-surface font-orbitron">
+            Available for Projects &amp; Roles
+          </span>
+        </motion.div>
 
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-          <Link className="group relative px-10 py-5 bg-gradient-to-r from-primary to-white rounded-2xl text-[#0a1128] font-extrabold title-md transition-all duration-500 hover:scale-105 hover:shadow-[0_0_50px_rgba(189,157,255,0.8)] overflow-hidden w-full sm:w-auto flex items-center justify-center gap-3" href="#projects">
-            <span className="relative z-10 uppercase tracking-wider"> Projects</span>
-            <span className="material-symbols-outlined relative z-10 transition-transform duration-500 group-hover:translate-x-2">arrow_forward</span>
-            
-            {/* Button internal shine effect */}
-            <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/50 to-transparent z-0"></div>
-          </Link>
-          <a className="group relative px-10 py-5 border-2 border-outline-variant/50 rounded-2xl text-white font-bold title-md hover:bg-surface-variant/50 transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:-translate-y-1 w-full sm:w-auto bg-[#192540]/20 backdrop-blur-md flex items-center justify-center gap-2" href="/Waleed_Refaat_CV_Updated.pdf" download="Waleed_Refaat_CV.pdf">
-            <span className="material-symbols-outlined">download</span>
-            Download CV
-            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-[#192540] text-xs text-white px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap hidden sm:block shadow-2xl border border-outline-variant/30">
-              PDF Format, 250KB
-              <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#192540] rotate-45 border-b border-r border-outline-variant/30"></div>
+        {/* Name Title */}
+        <motion.h1
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-4 text-white font-orbitron leading-[1.05]"
+        >
+          Waleed Refaat <span className="text-gradient-primary">Abbas</span>
+        </motion.h1>
+
+        {/* Subtitle Role */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+          className="text-base sm:text-lg md:text-xl text-on-surface-variant font-medium mb-8 max-w-2xl leading-relaxed"
+        >
+          Frontend Engineer &amp; Full-Stack MERN Developer specializing in high-speed, interactive web experiences with <span className="text-white font-semibold">React</span>, <span className="text-white font-semibold">Next.js 15</span>, and <span className="text-primary font-semibold">GSAP animations</span>.
+        </motion.p>
+
+        {/* Interactive Multi-Tab Cyber Terminal */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="w-full max-w-2xl mb-10 text-left rounded-2xl glass border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.7)] overflow-hidden"
+        >
+          {/* Terminal Title Bar */}
+          <div className="flex items-center justify-between px-4 py-3 bg-[#0a1128]/80 border-b border-white/10">
+            <div className="flex items-center gap-2">
+              <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+              <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+              <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+              <span className="text-xs text-outline ml-2 font-mono hidden sm:inline-block">waleed@portfolio:~$</span>
             </div>
+
+            {/* Terminal Tab Switchers */}
+            <div className="flex items-center gap-1">
+              {TERMINAL_TABS.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-3 py-1 text-xs font-mono rounded-md transition-all ${
+                    activeTab === tab.id
+                      ? "bg-primary/20 text-primary border border-primary/40 font-bold"
+                      : "text-on-surface-variant hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+
+              <button
+                onClick={handleCopy}
+                title="Copy Terminal Text"
+                className="ml-2 p-1 text-on-surface-variant hover:text-white transition-colors"
+              >
+                <span className="material-symbols-outlined text-sm">
+                  {copied ? "check" : "content_copy"}
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Terminal Body */}
+          <div className="p-5 font-mono text-xs sm:text-sm bg-[#050b18]/90 min-h-[130px] flex flex-col justify-between">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentTab.id}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.2 }}
+                className="space-y-2.5"
+              >
+                <div className="flex items-center gap-2 text-primary">
+                  <span className="text-secondary">❯</span>
+                  <span className="font-bold">{currentTab.command}</span>
+                </div>
+                <pre className="text-white whitespace-pre-wrap leading-relaxed font-mono">
+                  {currentTab.content}
+                </pre>
+                <div className="pt-2 text-xs text-emerald-400 font-medium">
+                  ✦ {currentTab.highlight}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </motion.div>
+
+        {/* CTA Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.55 }}
+          className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center w-full sm:w-auto"
+        >
+          <Link
+            href="#projects"
+            className="group relative px-8 py-4 bg-gradient-to-r from-primary to-secondary rounded-xl text-surface font-extrabold text-sm uppercase tracking-wider font-orbitron transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(189,157,255,0.7)] flex items-center justify-center gap-2 w-full sm:w-auto overflow-hidden"
+          >
+            <span>Explore Projects</span>
+            <span className="material-symbols-outlined text-lg group-hover:translate-x-1.5 transition-transform duration-300">
+              arrow_forward
+            </span>
+          </Link>
+
+          <a
+            href="/Waleed_Refaat_CV_Updated.pdf"
+            download="Waleed_Refaat_CV.pdf"
+            className="group px-8 py-4 rounded-xl glass text-white font-bold text-sm uppercase tracking-wider font-orbitron border border-white/20 hover:border-primary/50 hover:bg-white/5 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 w-full sm:w-auto"
+          >
+            <span className="material-symbols-outlined text-lg text-secondary group-hover:translate-y-0.5 transition-transform">
+              download
+            </span>
+            <span>Download CV</span>
           </a>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
 }
-

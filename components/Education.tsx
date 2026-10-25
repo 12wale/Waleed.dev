@@ -1,54 +1,132 @@
+"use client";
+
+import { motion } from "framer-motion";
+
+const CERTIFICATES = [
+  {
+    title: "Frontend Developer Internship",
+    issuer: "LevelUp ESG · London, UK",
+    year: "2025",
+    icon: "workspace_premium",
+    color: "text-primary",
+    bg: "bg-primary/10",
+  },
+  {
+    title: "React.js Advanced Development",
+    issuer: "Devs Activity · Suez Canal University",
+    year: "2024",
+    icon: "code",
+    color: "text-secondary",
+    bg: "bg-secondary/10",
+  },
+  {
+    title: "Introduction to Cybersecurity",
+    issuer: "Cisco Networking Academy",
+    year: "2024",
+    icon: "shield",
+    color: "text-tertiary",
+    bg: "bg-tertiary/10",
+  },
+];
+
 export default function Education() {
   return (
-    <section className="py-16 md:py-24 px-4 md:px-8 bg-surface-container-low" id="education">
+    <section className="py-24 md:py-32 px-4 md:px-8 bg-surface-container-low relative" id="education">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
-          {/* Education */}
-          <div className="space-y-8" data-aos="fade-right">
-            <h2 className="text-2xl md:text-3xl font-extrabold text-white flex items-center gap-4">
-              <span className="material-symbols-outlined text-primary">school</span> Education
-            </h2>
-            <div className="space-y-6">
-              <div className="glass p-6 rounded-lg border-l-4 border-primary hover:-translate-y-1 transition-transform cursor-default">
-                <h3 className="text-lg md:text-xl font-bold text-white">Bachelor of Science in Computer Science</h3>
-                <p className="text-sm md:text-base text-on-surface-variant">Fayoum University · Faculty of Computer Science</p>
-                <span className="text-xs md:text-sm text-outline">Sep 2023 – Nov 2028 (Expected) · 2nd Year</span>
-                <ul className="mt-3 text-xs md:text-sm text-on-surface-variant space-y-1">
-                  <li className="flex gap-2"><span className="text-primary">•</span> Active member of student technical communities &amp; extracurricular activities.</li>
-                  <li className="flex gap-2"><span className="text-primary">•</span> ICPC trainee — algorithmic problem-solving &amp; advanced data structures.</li>
-                </ul>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+          {/* Education Track */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="space-y-6"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <span className="material-symbols-outlined text-primary text-xl">school</span>
               </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-orbitron">
+                Academic Foundation
+              </h2>
             </div>
-          </div>
-          {/* Languages & Certifications */}
-          <div className="space-y-8" data-aos="fade-left" data-aos-delay="200">
-            <h2 className="text-2xl md:text-3xl font-extrabold text-white flex items-center gap-4">
-              <span className="material-symbols-outlined text-secondary">language</span> Details
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="glass p-4 rounded-lg flex items-center gap-4 group hover:bg-surface-container-highest transition-colors cursor-pointer relative" title="Frontend Developer Internship Certificate">
-                <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">workspace_premium</span>
-                <div>
-                  <h4 className="font-bold text-sm text-white">Internship Certificate</h4>
-                  <p className="text-xs text-on-surface-variant">LevelUp ESG · 2025</p>
-                </div>
+
+            <div className="p-7 rounded-2xl glass-card border-l-4 border-l-primary space-y-4">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-primary">
+                Sep 2023 – Nov 2028 (Expected) · 2nd Year
+              </span>
+
+              <div>
+                <h3 className="text-xl font-bold text-white font-orbitron">
+                  Bachelor of Science in Computer Science
+                </h3>
+                <p className="text-secondary text-sm font-semibold mt-1">
+                  Faculty of Computer Science &amp; Artificial Intelligence · Fayoum University
+                </p>
               </div>
-              <div className="glass p-4 rounded-lg flex items-center gap-4 group hover:bg-surface-container-highest transition-colors cursor-pointer relative" title="Intro to Cyber Security – Cisco">
-                <span className="material-symbols-outlined text-tertiary group-hover:scale-110 transition-transform">shield</span>
-                <div>
-                  <h4 className="font-bold text-sm text-white">Intro to Cyber Security</h4>
-                  <p className="text-xs text-on-surface-variant">Cisco Networking Academy · 2024</p>
-                </div>
-              </div>
-              <div className="glass p-4 rounded-lg flex items-center gap-4 group hover:bg-surface-container-highest transition-colors cursor-pointer relative" title="React.js Development Course – Devs Activity">
-                <span className="material-symbols-outlined text-secondary group-hover:scale-110 transition-transform">token</span>
-                <div>
-                  <h4 className="font-bold text-sm text-white">React.js Development</h4>
-                  <p className="text-xs text-on-surface-variant">Devs Activity · Suez Canal University</p>
-                </div>
-              </div>
+
+              <ul className="space-y-2.5 pt-3 border-t border-white/10 text-xs sm:text-sm text-on-surface">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">✦</span>
+                  <span>Head of Frontend Team at Google Developer Student Clubs (GDSC).</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">✦</span>
+                  <span>Trainee in International Collegiate Programming Contest (ICPC) — data structures &amp; algorithmic problem solving.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-0.5">✦</span>
+                  <span>Coursework in OOP, Data Structures, Algorithms, Discrete Mathematics, and Database Systems.</span>
+                </li>
+              </ul>
             </div>
-          </div>
+          </motion.div>
+
+          {/* Certifications & Badges */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="space-y-6"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center">
+                <span className="material-symbols-outlined text-secondary text-xl">verified</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-orbitron">
+                Certifications &amp; Training
+              </h2>
+            </div>
+
+            <div className="space-y-4">
+              {CERTIFICATES.map((cert) => (
+                <div
+                  key={cert.title}
+                  className="p-5 rounded-xl glass-card border border-white/10 hover:border-secondary/40 flex items-center gap-4 group transition-all"
+                >
+                  <div className={`w-12 h-12 rounded-xl ${cert.bg} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
+                    <span className={`material-symbols-outlined text-2xl ${cert.color}`}>
+                      {cert.icon}
+                    </span>
+                  </div>
+
+                  <div className="flex-grow">
+                    <h4 className="text-sm sm:text-base font-bold text-white font-sans group-hover:text-secondary transition-colors">
+                      {cert.title}
+                    </h4>
+                    <p className="text-xs text-on-surface-variant font-mono mt-0.5">
+                      {cert.issuer}
+                    </p>
+                  </div>
+
+                  <span className="text-xs font-mono font-bold text-outline px-2 py-1 rounded bg-white/5 border border-white/10">
+                    {cert.year}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
