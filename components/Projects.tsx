@@ -3,8 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { useGame } from "@/context/GameContext";
-import { gameAudio } from "@/lib/gameAudio";
 
 interface Project {
   id: string;
@@ -130,7 +128,6 @@ const projects: Project[] = [
 ];
 
 export default function Projects() {
-  const { unlockQuest } = useGame();
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
@@ -140,14 +137,10 @@ export default function Projects() {
 
   const handleCategoryClick = (catId: string) => {
     setActiveCategory(catId);
-    gameAudio.playSelect();
-    unlockQuest("deployment-recon");
   };
 
   const handleOpenDetails = (project: Project) => {
     setSelectedProject(project);
-    gameAudio.playSelect();
-    unlockQuest("deployment-recon");
   };
 
   return (
@@ -178,7 +171,7 @@ export default function Projects() {
               <button
                 key={cat.id}
                 onClick={() => handleCategoryClick(cat.id)}
-                onMouseEnter={() => gameAudio.playHover()}
+
                 className={`relative px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 font-orbitron cursor-pointer ${
                   isActive ? "text-white" : "text-on-surface-variant hover:text-white"
                 }`}
@@ -267,7 +260,7 @@ export default function Projects() {
                         href={project.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        onMouseEnter={() => gameAudio.playHover()}
+        
                         className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-primary to-secondary text-surface text-xs font-bold font-orbitron uppercase tracking-wider hover:shadow-[0_0_20px_rgba(189,157,255,0.6)] hover:scale-105 transition-all"
                       >
                         <span className="material-symbols-outlined text-base">language</span>
@@ -280,7 +273,7 @@ export default function Projects() {
                         href={project.codeUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        onMouseEnter={() => gameAudio.playHover()}
+        
                         className="flex items-center gap-2 px-4 py-2 rounded-xl glass border border-white/15 text-white text-xs font-bold font-orbitron uppercase tracking-wider hover:border-primary/50 hover:bg-white/10 transition-all"
                       >
                         <span className="material-symbols-outlined text-base">code</span>
@@ -290,7 +283,7 @@ export default function Projects() {
 
                     <button
                       onClick={() => handleOpenDetails(project)}
-                      onMouseEnter={() => gameAudio.playHover()}
+      
                       className="ml-auto text-xs font-bold text-secondary hover:text-white flex items-center gap-1 transition-colors font-orbitron cursor-pointer"
                     >
                       <span>Details</span>

@@ -4,11 +4,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
-import { useGame } from "@/context/GameContext";
-import { gameAudio } from "@/lib/gameAudio";
 
 export default function Contact() {
-  const { unlockQuest } = useGame();
   const [formState, setFormState] = useState({
     name: "",
     email: "",
@@ -22,13 +19,10 @@ export default function Contact() {
     if (!formState.name || !formState.email || !formState.message) return;
 
     setStatus("submitting");
-    gameAudio.playSelect();
 
     // Simulating smooth submission (or hook to API)
     setTimeout(() => {
       setStatus("success");
-      gameAudio.playLevelUp();
-      unlockQuest("first-contact");
       setFormState({ name: "", email: "", message: "" });
       setTimeout(() => setStatus("idle"), 5000);
     }, 1200);
@@ -37,8 +31,6 @@ export default function Contact() {
   const handleCopyEmail = () => {
     navigator.clipboard.writeText("wlydrftm399@gmail.com");
     setCopiedEmail(true);
-    gameAudio.playAchievement();
-    unlockQuest("first-contact");
     setTimeout(() => setCopiedEmail(false), 2500);
   };
 
