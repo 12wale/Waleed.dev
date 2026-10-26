@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import PlanetSkills from "@/components/PlanetSkills";
 
 interface SkillItem {
   name: string;
@@ -66,6 +67,7 @@ const METHODOLOGIES = [
 export default function Skills() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"planet" | "grid">("planet");
 
   const filteredSkills = SKILLS_DATA.filter(
     (skill) => activeCategory === "all" || skill.category === activeCategory
@@ -77,28 +79,57 @@ export default function Skills() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40rem] h-[20rem] bg-secondary/10 blur-[150px] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-14 space-y-4">
+        <div className="text-center mb-10 space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass border border-secondary/30 text-secondary text-xs uppercase tracking-widest font-bold font-orbitron">
-            <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-            Technical Expertise
+            <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+            Technical Celestial Core
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white font-orbitron">
             Skills &amp; <span className="text-gradient-secondary">Capabilities</span>
           </h2>
           <p className="text-on-surface-variant max-w-xl mx-auto text-sm sm:text-base">
-            Modern technologies, libraries, and frameworks I use to build ultra-responsive, performant web applications.
+            An interactive 3D celestial planet rotating slowly around its axis with surrounding technical satellites.
           </p>
         </div>
 
+        {/* View Mode Toggle: 3D Planet vs Grid */}
+        <div className="flex items-center justify-center gap-2 mb-6 sm:mb-8 px-2">
+          <div className="p-1 rounded-full glass border border-white/10 flex items-center gap-1 shadow-lg max-w-full">
+            <button
+              onClick={() => setViewMode("planet")}
+              className={`px-3 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-bold font-orbitron transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                viewMode === "planet"
+                  ? "bg-gradient-to-r from-secondary to-primary text-surface shadow-[0_0_20px_rgba(52,181,250,0.5)]"
+                  : "text-on-surface-variant hover:text-white"
+              }`}
+            >
+              <span className="material-symbols-outlined text-sm sm:text-base">public</span>
+              <span>3D Planet</span>
+            </button>
+
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`px-3 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-bold font-orbitron transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                viewMode === "grid"
+                  ? "bg-gradient-to-r from-secondary to-primary text-surface shadow-[0_0_20px_rgba(52,181,250,0.5)]"
+                  : "text-on-surface-variant hover:text-white"
+              }`}
+            >
+              <span className="material-symbols-outlined text-sm sm:text-base">grid_view</span>
+              <span>Matrix Grid</span>
+            </button>
+          </div>
+        </div>
+
         {/* Category Selector Tabs */}
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-12">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-3 mb-8 sm:mb-10 px-2">
           {CATEGORIES.map((cat) => {
             const isActive = activeCategory === cat.id;
             return (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`relative px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 font-orbitron cursor-pointer ${
+                className={`relative px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm font-semibold transition-all duration-300 font-orbitron cursor-pointer whitespace-nowrap ${
                   isActive ? "text-white" : "text-on-surface-variant hover:text-white"
                 }`}
               >
@@ -115,11 +146,14 @@ export default function Skills() {
           })}
         </div>
 
-        {/* Dynamic Skills Grid */}
-        <motion.div
-          layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
-        >
+        {/* Main View: 3D Planet Orbit vs Grid Matrix */}
+        {viewMode === "planet" ? (
+          <PlanetSkills activeCategory={activeCategory} />
+        ) : (
+          <motion.div
+            layout
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+          >
           <AnimatePresence mode="popLayout">
             {filteredSkills.map((skill) => {
               const isSelected = selectedSkill === skill.name;
@@ -190,6 +224,7 @@ export default function Skills() {
             })}
           </AnimatePresence>
         </motion.div>
+      )}
 
         {/* Methodologies & Standards */}
         <div className="mt-14 p-6 sm:p-8 rounded-2xl glass-card border border-white/10">
